@@ -1,0 +1,46 @@
+The same-origin policy is a critical security measure implemented by web browsers to prevent malicious scripts on one origin from interacting with resources on a different origin. This policy restricts how a web page can make requests to a different domain, protocol, or port than the one that served the web page.
+
+Same-Origin Policy
+Definition: The same-origin policy ensures that a script loaded from one origin (domain, protocol, and port) cannot access properties or make requests to resources on a different origin. For example, a web page served from https://example.com cannot make AJAX requests to https://anotherdomain.com directly due to this policy.
+
+Origins: The origin of a web page is defined by its protocol (http/https), domain (example.com), and port (if specified). For example, https://example.com:443 and https://example.com:8443 are considered different origins due to their different ports.
+
+Working Around the Same-Origin Policy
+There are several techniques to work around the same-origin policy for legitimate purposes, particularly when dealing with cross-origin requests:
+
+Cross-Origin Resource Sharing (CORS):
+
+Definition: CORS is a mechanism that allows servers to specify who can access their resources by including specific HTTP headers.
+How It Works: When a browser makes a cross-origin request, it sends an Origin header to the server. The server can then respond with Access-Control-Allow-Origin headers specifying which origins are allowed to access the resource.
+
+Access-Control-Allow-Origin: https://yourdomain.com
+
+Implementation: To use CORS, the server needs to include appropriate headers in its responses. The client-side code making the request doesn't need to handle CORS directly.
+
+JSONP (JSON with Padding):
+
+Definition: JSONP is a technique that allows cross-origin requests by exploiting the fact that script tags are not restricted by the same-origin policy.
+How It Works: The client includes a <script> tag with a URL pointing to the server and a callback function name. The server returns the data wrapped in the callback function, which is executed on the client.
+Example:
+<script src="https://example.com/data?callback=myCallback"></script>
+<script>
+  function myCallback(data) {
+    console.log(data);
+  }
+</script>
+
+Limitations: JSONP only supports GET requests and has been largely replaced by CORS for security reasons.
+
+Proxy Server:
+
+Definition: A proxy server acts as an intermediary between the client and the server, forwarding requests and responses.
+How It Works: The client makes a request to the same-origin proxy server, which then makes the cross-origin request on behalf of the client.
+Example:
+Client Request: GET /proxy?url=https://anotherdomain.com/data
+Proxy Server: Makes the request to https://anotherdomain.com/data, receives the response, and sends it back to the client.
+
+Server-Side Requests:
+
+Definition: The server makes the cross-origin request and sends the data to the client. This is often used in combination with server-side proxies.
+How It Works: Instead of making a cross-origin request from the client-side script, you make it from the server, which does not face the same-origin restriction.
+Example: Using Node.js or another backend technology to fetch data from an external API and serve it to the client.
